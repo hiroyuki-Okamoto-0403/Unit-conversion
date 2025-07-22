@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>単位変換アプリ</title>
+    <title>インチ・センチ変換アプリ</title>
     <style>
         body {
             font-family: sans-serif;
@@ -19,42 +19,61 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             text-align: center;
+            width: 320px;
         }
         h1 {
             margin-bottom: 1.5rem;
+            color: #333;
         }
         .input-group {
             margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
         }
         input, select {
             padding: 0.5rem;
             font-size: 1rem;
             border-radius: 4px;
             border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        input[type="number"] {
+            width: 60%;
+        }
+        select {
+            width: 38%;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
         .result {
             margin-top: 1.5rem;
             font-size: 1.2rem;
             font-weight: bold;
+            color: #28a745;
+            min-height: 1.5rem;
         }
     </style>
 </head>
 <body>
 
 <div class="converter">
-    <h1>単位変換</h1>
+    <h1>インチ ⇔ センチ 変換</h1>
     <div class="input-group">
         <input type="number" id="inputValue" placeholder="値を入力...">
-        <select id="fromUnit">
-            <option value="meters">メートル</option>
-            <option value="feet">フィート</option>
-        </select>
-    </div>
-    <p>↓</p>
-    <div class="input-group">
-        <select id="toUnit">
-            <option value="feet">フィート</option>
-            <option value="meters">メートル</option>
+        <select id="unitSelector">
+            <option value="inches-to-cm">インチ → センチ</option>
+            <option value="cm-to-inches">センチ → インチ</option>
         </select>
     </div>
     <button onclick="convert()">変換</button>
@@ -64,32 +83,32 @@
 <script>
     function convert() {
         const inputValue = document.getElementById('inputValue').value;
-        const fromUnit = document.getElementById('fromUnit').value;
-        const toUnit = document.getElementById('toUnit').value;
+        const unitSelector = document.getElementById('unitSelector').value;
         const resultElement = document.getElementById('result');
 
         if (inputValue === '') {
             resultElement.innerText = '数値を入力してください';
+            resultElement.style.color = '#dc3545'; // エラーメッセージは赤色に
             return;
         }
 
         let result;
+        let resultUnit = '';
         const value = parseFloat(inputValue);
+        resultElement.style.color = '#28a745'; // 通常の結果は緑色に
 
-        // メートルからフィートへ
-        if (fromUnit === 'meters' && toUnit === 'feet') {
-            result = value * 3.28084;
+        // インチからセンチへ
+        if (unitSelector === 'inches-to-cm') {
+            result = value * 2.54;
+            resultUnit = 'センチメートル';
         } 
-        // フィートからメートルへ
-        else if (fromUnit === 'feet' && toUnit === 'meters') {
-            result = value / 3.28084;
-        } 
-        // 同じ単位同士
-        else {
-            result = value;
+        // センチからインチへ
+        else if (unitSelector === 'cm-to-inches') {
+            result = value / 2.54;
+            resultUnit = 'インチ';
         }
 
-        resultElement.innerText = `${result.toFixed(3)} ${toUnit}`;
+        resultElement.innerText = `${result.toFixed(3)} ${resultUnit}`;
     }
 </script>
 
